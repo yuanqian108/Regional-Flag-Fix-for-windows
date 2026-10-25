@@ -1,0 +1,19 @@
+# 备份的系统原版字体（含微软版权，不应提交）
+backup/
+core/seguiemj_original.ttf
+core/seguiemj_author_mod.ttf
+
+# 运行时生成的日志
+last-run.log
+*.log
+
+# 临时文件
+*.tmp
+~$*
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store
