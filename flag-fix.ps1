@@ -23,7 +23,20 @@ param(
     [switch]$NoRestart
 )
 
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Continue'
+
+# 顶层异常捕获：任何未处理错误都提示用户，而不是静默退出
+trap {
+  Write-Host ''
+  Write-Host '  [X]  发生错误，操作未完成' -ForegroundColor Red
+  Write-Host ('       ' + $_.Exception.Message) -ForegroundColor Gray
+  Write-Host ''
+  Write-Host '  如果问题持续，请把上面的信息反馈到 GitHub Issues：' -ForegroundColor Yellow
+  Write-Host '  https://github.com/yuanqian108/Regional-Flag-Fix-for-windows/issues' -ForegroundColor Gray
+  Write-Host ''
+  Read-Host '按 Enter 退出' | Out-Null
+  exit 1
+}
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $CoreDir   = Join-Path $ScriptDir 'core'
 $BackupDir = Join-Path $ScriptDir 'backup'
@@ -231,6 +244,7 @@ function Do-Install([string]$Mode) {
   }
   else {
     Step ('安装为 ' + $c.T)
+    $activeName = (Get-Item $FontReg).GetValue($RegName)
     $tgt = Join-Path $FontsDir $c.T
     $skipCopy = $false
     # 若目标已存在且大小一致，说明已是当前版本，无需重复安装
@@ -249,36 +263,92 @@ function Do-Install([string]$Mode) {
       }
     }
     if(-not $skipCopy){
-    $copied = $false
-    for($i=1;$i -le 5;$i++){
-      try{
-        Copy-Item $src $tgt -Force -EA Stop
-        if((Get-Item $tgt).Length -eq (Get-Item $src).Length){ $copied=$true; break }
-      } catch { Start-Sleep -Seconds 2 }
-    }
-    if(-not $copied){
-      Fail ($c.T + ' 正被系统占用，无法写入')
-      Say ''
-      Say '  → 请重启电脑后重新运行 install' 'Yellow'
-      Say '  （备份已完成，重启后再装即可）' 'Gray'
-      Start-FC; Start-Shell
-      exit 1
-    }
-    Ok ('已写入 (' + ('{0:N0}' -f (Get-Item $tgt).Length) + ' 字节)')
-    Set-ItemProperty -Path $FontReg -Name $RegName -Value $c.T
-    Ok ('注册表 -> ' + $c.T)
+      $copied = $false
+      for($i=1;$i -le 3;$i++){
+        try{
+          Copy-Item $src $tgt -Force -EA Stop
+          if((Get-Item $tgt).Length -eq (Get-Item $src).Length){ $copied=$true; break }
+        } catch { Start-Sleep -Seconds 2 }
+      }
+
+      # 关键：旧版本字体正在被系统使用，无法覆盖（升级场景常见）
+      # 改用新文件名安装，并切换注册表指向
+      if(-not $copied){
+        Warn ($c.T + ' 被系统占用，改用新文件名安装')
+        $altName = $null
+        for($n=2; $n -le 9; $n++){
+          $candidate = 'segoeemj_v' + $n + '.ttf'
+          $candidatePath = Join-Path $FontsDir $candidate
+          # 找出一个未被注册表指向、且能写入的名字
+          if($candidate -eq $activeName){ continue }
+          $wrote = $false
+          for($k=1; $k -le 2; $k++){
+            try{
+              if(Test-Path $candidatePath){ Remove-Item $candidatePath -Force -EA Stop }
+              Copy-Item $src $candidatePath -Force -EA Stop
+              if((Get-Item $candidatePath).Length -eq (Get-Item $src).Length){ $wrote = $true; break }
+            } catch { Start-Sleep -Seconds 1 }
+          }
+          if($wrote){ $altName = $candidate; $tgt = $candidatePath; break }
+        }
+        if(-not $altName){
+          Fail '无法写入字体目录'
+          Say ''
+          Say '  请以管理员身份重新运行，或重启后再试' 'Yellow'
+          Start-FC; Start-Shell
+          Read-Host '按 Enter 退出' | Out-Null
+          exit 1
+        }
+        $c.T = $altName
+        $copied = $true
+        Ok ('已写入新文件: ' + $altName)
+      }
+
+      if($copied){
+        Ok ('已写入 (' + ('{0:N0}' -f (Get-Item $tgt).Length) + ' 字节)')
+        Set-ItemProperty -Path $FontReg -Name $RegName -Value $c.T
+        Ok ('注册表 -> ' + $c.T)
+      }
     }
   }
-  # ---- 3. 清理多余补丁（保留刚装的那个）----
+  # ---- 3. 清理多余补丁（严格保护正在生效的文件）----
   Step '清理多余补丁'
-  $activeName = (Get-Item $FontReg).GetValue($RegName)
+  $activeFile = (Get-Item $FontReg).GetValue($RegName)
+  Ok ('当前生效: ' + $activeFile)
   $removed = 0
   foreach($f in Get-ChildItem $FontsDir -Filter 'segoeemj*.ttf' -EA SilentlyContinue){
-    if($f.Name -eq $activeName){ continue }
-    try{ Remove-Item $f.FullName -Force -EA Stop; $removed++; Ok ('删除 '+$f.Name) }
-    catch{ if(Queue-Delete $f.FullName){ Warn ('登记重启删除: '+$f.Name) } else { Warn ('占用中: '+$f.Name) } }
+    # 绝不删除注册表正在指向的文件
+    if($f.Name -eq $activeFile){
+      Say ('  保留生效文件: ' + $f.Name) 'DarkGray'
+      continue
+    }
+    try{
+      Remove-Item $f.FullName -Force -EA Stop
+      $removed++
+      Ok ('删除多余: '+$f.Name)
+    }
+    catch{
+      if(Queue-Delete $f.FullName){ Warn ('登记重启删除: '+$f.Name) } else { Warn ('占用中，暂不处理: '+$f.Name) }
+    }
   }
   if($removed -eq 0){ Ok '无多余补丁' }
+
+  # 安全检查：确认生效文件确实存在
+  $activePath = Join-Path $FontsDir $activeFile
+  if(-not (Test-Path $activePath)){
+    Fail ('严重错误：注册表指向的 ' + $activeFile + ' 不存在！')
+    Say '  正在回滚注册表...' 'Yellow'
+    $fb = Get-ChildItem $FontsDir -Filter 'segoeemj*.ttf' -EA SilentlyContinue | Select-Object -First 1
+    if($fb){
+      Set-ItemProperty -Path $FontReg -Name $RegName -Value $fb.Name
+      Ok ('已改为指向: ' + $fb.Name)
+    } else {
+      Set-ItemProperty -Path $FontReg -Name $RegName -Value 'seguiemj.ttf'
+      Warn '已回退到系统原版（emoji 将显示为黑白，但不会缺失）'
+    }
+  } else {
+    Ok ('生效文件已确认存在 (' + ('{0:N0}' -f (Get-Item $activePath).Length) + ' 字节)')
+  }
 
   Step '恢复环境'
   Start-FC; Start-Shell
@@ -364,8 +434,36 @@ if (-not (Test-Admin)) {
   Say '需要管理员权限，正在请求提权...' 'Yellow'
   $argList = @('-NoProfile','-ExecutionPolicy','Bypass','-File', ('"' + $PSCommandPath + '"'), $action)
   if ($NoRestart) { $argList += '-NoRestart' }
-  try { Start-Process powershell -Verb RunAs -ArgumentList $argList -Wait }
-  catch { Fail '提权失败或被取消，操作未执行' }
+  $elevated = $false
+  try {
+    $proc = Start-Process powershell -Verb RunAs -ArgumentList $argList -Wait -PassThru -EA Stop
+    $elevated = $true
+    if ($proc -and $proc.ExitCode -ne 0) {
+      Say ''
+      # 0xC000013A = 用户按了 Ctrl+C 或关闭了窗口，不算错误
+      if ($proc.ExitCode -eq -1073741510) {
+        Warn '管理员窗口被关闭（按了 Ctrl+C 或点了关闭按钮）'
+        Say '  操作可能未完成，建议重新运行一次。' 'Yellow'
+      } else {
+        Warn ('管理员进程退出码: ' + $proc.ExitCode + ' (0x' + ('{0:X8}' -f $proc.ExitCode) + ')')
+        Say '  操作未成功完成，请查看日志或反馈问题。' 'Yellow'
+      }
+    } else {
+      Say ''
+      Say '操作已完成。' 'Green'
+    }
+  } catch {
+    Fail '提权失败或被取消'
+    Say ''
+    Say '  可能原因：' 'Yellow'
+    Say '    1. 在 UAC 提示里点了「否」' 'Gray'
+    Say '    2. 当前账户不是管理员账户' 'Gray'
+    Say '    3. 组策略禁止提权' 'Gray'
+    Say ''
+    Say '  建议：右键 启动.cmd -> 以管理员身份运行' 'Cyan'
+    Read-Host '按 Enter 退出' | Out-Null
+    exit 1
+  }
   exit
 }
 
