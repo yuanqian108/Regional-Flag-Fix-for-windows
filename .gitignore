@@ -17,3 +17,6 @@ last-run.log
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# 技术文档（仅本地保留，不公开）
+docs/TECHNICAL.md

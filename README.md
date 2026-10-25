@@ -7,7 +7,7 @@
 [![Platform](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?logo=windows)](#)
 [![Emoji](https://img.shields.io/badge/Emoji-15.1%20full-orange)](#)
 [![Flags](https://img.shields.io/badge/Flags-259-green)](#)
-[![Size](https://img.shields.io/badge/Font-6.1MB-lightgrey)](#)
+[![Size](https://img.shields.io/badge/Font-5.8MB-lightgrey)](#)
 
 </div>
 
@@ -227,7 +227,7 @@ Windows 11 支持 Emoji 15.1，但很多第三方字体只做到 13.1。
 <details>
 <summary><b>会占用多少空间？</b></summary>
 
-字体本身 6.1MB，加上原版备份约 19MB。
+字体本身 5.8MB，加上原版备份约 19MB。
 </details>
 
 ---
