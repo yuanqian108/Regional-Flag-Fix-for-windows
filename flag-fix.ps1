@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Windows 11 地区旗帜 emoji 一键修复工具
 .DESCRIPTION
