@@ -3,6 +3,10 @@ backup/
 core/seguiemj_original.ttf
 core/seguiemj_author_mod.ttf
 
+# 构建过程中的中间/备份字体，不进仓库
+core/*.before-*.ttf
+core/segoeemj_patched.bak*.ttf
+
 # 运行时生成的日志
 last-run.log
 *.log
