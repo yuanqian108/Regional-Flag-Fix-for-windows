@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🇨🇳 Windows 11 国旗 Emoji
+# 🇨🇳 Windows 11 地区旗帜 Emoji
 
-**让 Windows 显示完整彩色的国旗 —— 浏览器、开始菜单、文件管理器都正常。**
+**让 Windows 显示完整彩色的地区旗帜 —— 浏览器、开始菜单、文件管理器都正常。**
 
 [![Platform](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?logo=windows)](#)
 [![Emoji](https://img.shields.io/badge/Emoji-15.1%20full-orange)](#)
@@ -15,10 +15,10 @@
 
 ## 问题
 
-Windows 自带的 emoji 字体不含国旗。输入 `🇨🇳` 只会显示成字母 **CN**，
+Windows 自带的 emoji 字体不含地区旗帜。输入 `🇨🇳` 只会显示成字母 **CN**，
 输入 `🇺🇸` 显示成 **US**。
 
-安装本项目的字体后，259 个国家和地区的国旗都能正常显示。
+安装本项目的字体后，259 面地区旗帜都能正常显示。
 
 > ⚠️ **本项目是纯技术项目，不对任何旗帜作政治表态。**
 > 字体中的旗帜集合完全遵循 Unicode 标准，详见 [政治免责声明](#️-政治免责声明)。
@@ -32,7 +32,7 @@ Windows 自带的 emoji 字体不含国旗。输入 `🇨🇳` 只会显示成�
 双击 **`启动.cmd`**，会弹出菜单：
 
 ```
-  Windows 11 国旗 Emoji 修复工具
+  Windows 11 地区旗帜 Emoji 修复工具
 =========================================
 
   当前生效: seguiemj.ttf
@@ -58,7 +58,7 @@ Windows 自带的 emoji 字体不含国旗。输入 `🇨🇳` 只会显示成�
 
 ### 第三步：检查
 
-重启后随便打开一个输入框，输入 `🇨🇳 🇺🇸 🇯🇵`，应该能看到彩色国旗。
+重启后随便打开一个输入框，输入 `🇨🇳 🇺🇸 🇯🇵`，应该能看到彩色地区旗帜。
 
 ### 如果想撤销
 
@@ -91,7 +91,7 @@ Windows 11 支持 Emoji 15.1，但很多第三方字体只做到 13.1。
 ### 4. 开始菜单和文件管理器也能显示
 
 这是最主要的改进。其他方案通常只修好了浏览器，
-在开始菜单、文件管理器里国旗会变成线稿或者干脆空白。
+在开始菜单、文件管理器里地区旗帜会变成线稿或者干脆空白。
 本项目让这些地方也能正常显示。详见下方「适用环境」。
 
 ---
@@ -110,11 +110,11 @@ Windows 11 支持 Emoji 15.1，但很多第三方字体只做到 13.1。
 
 **为什么有两种效果**
 
-浏览器、记事本这类程序支持彩色字体，国旗是彩色的，和图片一致。
+浏览器、记事本这类程序支持彩色字体，地区旗帜是彩色的，和图片一致。
 
 文件管理器和 WPF 应用不支持彩色字体 —— 这是 Windows 本身的限制，
 系统自带的 emoji 在那些地方也是黑白的。本项目保证它们至少能画出
-国旗的轮廓，而不是一片空白。
+地区旗帜的轮廓，而不是一片空白。
 
 > 相比之下，一些同类方案在开始菜单和文件管理器里会显示成**线稿**或**完全空白**。
 
@@ -135,7 +135,7 @@ Windows 11 支持 Emoji 15.1，但很多第三方字体只做到 13.1。
 <img src="docs/browser.png" width="100%">
 
 <details>
-<summary><b>展开查看全部 259 面国旗</b></summary>
+<summary><b>展开查看全部 259 面地区旗帜</b></summary>
 
 <img src="docs/flags-grid.png" width="100%">
 
@@ -145,11 +145,11 @@ Windows 11 支持 Emoji 15.1，但很多第三方字体只做到 13.1。
 
 ## ⚠️ 政治免责声明
 
-本项目是一个**纯技术项目**，目的是修复 Windows 字体缺少国旗字形的问题。
+本项目是一个**纯技术项目**，目的是修复 Windows 字体缺少地区旗帜字形的问题。
 
 ### 关于旗帜图形
 
-字体中的国旗图形来自 [Twemoji](https://github.com/jdecked/twemoji) 开源 emoji 集，
+字体中的地区旗帜图形来自 [Twemoji](https://github.com/jdecked/twemoji) 开源 emoji 集，
 其设计参照 Unicode 标准中的**区域指示符（Regional Indicator）**编码规范。
 
 **本项目不表达、也不代表任何政治立场**，包括但不限于：
@@ -205,7 +205,7 @@ Windows 11 支持 Emoji 15.1，但很多第三方字体只做到 13.1。
 <summary><b>文件管理器里是黑色的？</b></summary>
 
 文件管理器和 WPF 应用不支持彩色字体，这是 Windows 的限制。
-在这些地方国旗会显示为单色图案 —— 用系统自带的 emoji 也是黑白的。
+在这些地方地区旗帜会显示为单色图案 —— 用系统自带的 emoji 也是黑白的。
 </details>
 
 <details>
@@ -220,7 +220,7 @@ Windows 11 支持 Emoji 15.1，但很多第三方字体只做到 13.1。
   [OK] 系统原版存在: seguiemj.ttf
 ```
 
-另外可以双击 `emoji-test.html`，页面上能查看全部 emoji 和国旗，
+另外可以双击 `emoji-test.html`，页面上能查看全部 emoji 和地区旗帜，
 还能搜索码位、调字号。
 </details>
 
@@ -261,10 +261,10 @@ docs/                         截图
 
 <table>
 <tr><th width="190">项目</th><th>贡献</th></tr>
-<tr><td><a href="https://llccd.eu.org/2022/02/win_flags/"><b>llccd</b></a></td><td>核心思路：向 Segoe UI Emoji 注入国旗字形。</td></tr>
-<tr><td><a href="https://github.com/jdecked/twemoji"><b>Twemoji</b></a></td><td>259 面国旗的矢量图形与配色（CC-BY 4.0）。</td></tr>
-<tr><td><a href="https://github.com/tuannvbg/unicode-flags-for-windows"><b>tuannvbg</b></a></td><td>Windows 10/11 国旗修复的完整实践。</td></tr>
-<tr><td><a href="https://github.com/Chasmical/flag-emojis-for-windows"><b>Chasmical</b></a></td><td>国旗字体方案的重要参考。</td></tr>
+<tr><td><a href="https://llccd.eu.org/2022/02/win_flags/"><b>llccd</b></a></td><td>核心思路：向 Segoe UI Emoji 注入地区旗帜字形。</td></tr>
+<tr><td><a href="https://github.com/jdecked/twemoji"><b>Twemoji</b></a></td><td>259 面地区旗帜的矢量图形与配色（CC-BY 4.0）。</td></tr>
+<tr><td><a href="https://github.com/tuannvbg/unicode-flags-for-windows"><b>tuannvbg</b></a></td><td>Windows 10/11 地区旗帜修复的完整实践。</td></tr>
+<tr><td><a href="https://github.com/Chasmical/flag-emojis-for-windows"><b>Chasmical</b></a></td><td>地区旗帜字体方案的重要参考。</td></tr>
 <tr><td><a href="https://github.com/fonttools/fonttools"><b>fontTools</b></a></td><td>字体解析与修改工具（MIT）。</td></tr>
 <tr><td><b>Microsoft</b></td><td>Segoe UI Emoji 字体本身（版权归 Microsoft）。</td></tr>
 </table>

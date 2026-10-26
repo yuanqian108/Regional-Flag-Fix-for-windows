@@ -1,11 +1,11 @@
-﻿<#
+<#
 .SYNOPSIS
-    Windows 11 国旗 emoji 一键修复工具
+    Windows 11 地区旗帜 emoji 一键修复工具
 .DESCRIPTION
-    安装 / 还原 Segoe UI Emoji 字体，使国旗 emoji 正常显示。
+    安装 / 还原 Segoe UI Emoji 字体，使地区旗帜 emoji 正常显示。
     自动处理：管理员提权、字体缓存刷新、同名冲突清理、重启提示。
 .PARAMETER Action
-    install   安装补丁字体（全部 emoji + 259 面国旗）  [默认]
+    install   安装补丁字体（全部 emoji + 259 面地区旗帜）  [默认]
               首次安装会自动备份系统原版到 backup\
     restore   从备份还原为系统原版字体
     diagnose  只诊断当前状态，不做任何修改
@@ -198,7 +198,7 @@ function Show-Diagnose {
 
 function Do-Install([string]$Mode) {
   $map=@{
-    install=@{F='segoeemj_patched.ttf'; D='国旗修复版（全 emoji + 259 国旗）'; T='segoeemj.ttf'; From='core'}
+    install=@{F='segoeemj_patched.ttf'; D='地区旗帜修复版（全 emoji + 259 面地区旗帜）'; T='segoeemj.ttf'; From='core'}
     restore=@{F='seguiemj_original.ttf'; D='系统原版（从备份还原）'; T=$null; From='backup'}
   }
   $c=$map[$Mode]
@@ -366,7 +366,7 @@ function Do-Install([string]$Mode) {
 function Show-Menu {
   Say ''
   Say '=========================================' 'Cyan'
-  Say '  Windows 11 国旗 Emoji 修复工具' 'Cyan'
+  Say '  Windows 11 地区旗帜 Emoji 修复工具' 'Cyan'
   Say '=========================================' 'Cyan'
   Say ''
   $reg = (Get-Item $FontReg).GetValue($RegName)
@@ -380,7 +380,7 @@ function Show-Menu {
   Say ''
   Say '-----------------------------------------'
   Say '   [1] 安装修复版字体'
-  Say '       -> 全 emoji + 259 面国旗'
+  Say '       -> 全 emoji + 259 面地区旗帜'
   Say '       -> 自动先备份原版'
   Say ''
   Say '   [2] 还原系统原版字体'
